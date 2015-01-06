@@ -9,10 +9,10 @@ base_url = "http://www.amazon.com"
 
 
 def get_html(url):
-    request = urllib2.Request(url)
-    request.add_header('User-Agent', "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
-    response = urllib2.urlopen(request)
     try:
+        request = urllib2.Request(url)
+        request.add_header('User-Agent', "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
+        response = urllib2.urlopen(request)
         html = response.read()
     except:
         print "Failed while connecting destination url..."
@@ -33,15 +33,11 @@ def process_comments(url):
     file = open("./res/" + name, 'w+')
     # process each page
     for i in range(1, atoi(pages) + 1):
+        print "processing: " + name + "  page: " + str(i)
         spilt_url = url.split('pageNumber')
         url_child = spilt_url[0] + "pageNumber=" + str(i) + "&showViewpoints=0&sortBy=byRankDescending"
-        print "processing: " + name + "  page: " + str(i)
-        response = urllib2.urlopen(url_child)
-        try:
-            html = response.read()
-        except:
-            print "Internet disconnect while scratching..."
-            exit(0)
+        html = get_html(url_child)
+        soup = BeautifulSoup(html, fromEncoding="utf-8")
         reviews = soup.findAll('div', 'reviewText')
         for item in reviews:
             item = str(item).replace('<br />', '.').replace('<div class="reviewText">', '').replace('</div>', '')
@@ -78,6 +74,5 @@ def scratch(url):
             exit(0)
 
 
-url = input()
-scratch(url)
-
+#url = input()
+scratch("http://www.amazon.com/s/ref=sr_pg_1?rh=n%3A2335752011%2Cn%3A7072561011%2Ck%3Axiaomi&keywords=xiaomi&ie=UTF8&qid=1420468626&lo=mobile")
