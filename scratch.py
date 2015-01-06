@@ -21,7 +21,7 @@ def process_good(url):
     file = open('data', 'w+')
 
     # get number of pages
-    soup = BeautifulSoup(html, from_encoding="utf-8")
+    soup = BeautifulSoup(html, fromEncoding="utf-8")
     soup = soup.find('span', 'paging')
     pages = soup.findAll('a')[1].text
 
@@ -77,8 +77,7 @@ def get_goods_list(url):
 get_goods_list("http://www.amazon.com/s/ref=sr_pg_1?rh=n%3A2335752011%2Cn%3A7072561011%2Ck%3Axiaomi&keywords=xiaomi&ie=UTF8&qid=1420468626&lo=mobile")
 """
 
-#process('http://www.amazon.com/Nokia-Lumia-520-GoPhone-AT/product-reviews/B00E45043A/ref=cm_cr_pr_top_link_2?ie=UTF8&pageNumber=1&showViewpoints=0&sortBy=byRankDescending')
-#process_good('http://localhost/amazon.html')
+#process_good('http://www.amazon.com/Nokia-Lumia-520-GoPhone-AT/product-reviews/B00E45043A/ref=cm_cr_pr_top_link_2?ie=UTF8&pageNumber=1&showViewpoints=0&sortBy=byRankDescending')
 while 1:
     url = input()
     process_good(url)
