@@ -4,19 +4,23 @@ import urllib2
 from BeautifulSoup import BeautifulSoup
 from string import atoi
 import re
+from time import sleep
 
 base_url = "http://www.amazon.com"
 
 
 def get_html(url):
-    try:
-        request = urllib2.Request(url)
-        request.add_header('User-Agent', "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
-        response = urllib2.urlopen(request)
-        html = response.read()
-    except:
-        print "Failed while connecting destination url..."
-        exit(0)
+    while 1:
+        try:
+            request = urllib2.Request(url)
+            request.add_header('User-Agent', "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36")
+            response = urllib2.urlopen(request)
+            html = response.read()
+            break;
+        except:
+            print "\nFailed while connecting destination url..."
+            print "Reconnecting..."
+            sleep(3)
     # delete comments
     html = re.compile('<!--[^>]*-->').sub('', html)
     return html
@@ -30,9 +34,13 @@ def process_comments(url):
     soup = BeautifulSoup(html, fromEncoding="utf-8")
     spans = soup.find('span', 'paging')
     pages = spans.findAll('a')[1].text
-    file = open("./res/" + name, 'w+')
+    file = open("./res/" + name, 'w')
     # process each page
-    for i in range(1, atoi(pages) + 1):
+    try:
+        pages = atoi(pages)
+    except:
+        pages = 1
+    for i in range(1, pages + 1):
         print "processing: " + name + "  page: " + str(i)
         spilt_url = url.split('pageNumber')
         url_child = spilt_url[0] + "pageNumber=" + str(i) + "&showViewpoints=0&sortBy=byRankDescending"
